@@ -1,6 +1,4 @@
 using FBD
 using Test
 
-@testset "FBD.jl" begin
-    # Write your tests here.
-end
+include("dchsbm/model.jl")

@@ -1,5 +1,8 @@
 module FBD
 
-# Write your package code here.
+export DCHSBM_sampler
+
+include("dchsbm/affinity_function.jl")
+include("dchsbm/model.jl")
 
 end
