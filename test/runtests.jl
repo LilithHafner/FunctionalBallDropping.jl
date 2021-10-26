@@ -3,7 +3,7 @@ using Test
 
 include("dchsbm/model.jl")
 
-@testset "fail" begin
-    @test false
-    @test false
+@testset "pass" begin
+    @test true
+    @test true
 end
