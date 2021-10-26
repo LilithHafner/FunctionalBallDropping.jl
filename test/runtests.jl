@@ -5,4 +5,5 @@ include("dchsbm/model.jl")
 
 @testset "pass" begin
     @test true
+    @test true
 end
