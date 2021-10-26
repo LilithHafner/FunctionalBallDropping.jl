@@ -1,0 +1,13 @@
+name = "FBD"
+uuid = "86f54e4b-c326-4f4b-ad74-639fc688eb37"
+authors = ["Lilith Orion Hafner <60898866+LilithHafner@users.noreply.github.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
