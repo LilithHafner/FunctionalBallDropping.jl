@@ -5,8 +5,8 @@
 Usage:
 
 ```jl
-]add https://github.com/LilithHafner/FBD
-using FBD
+]add https://github.com/LilithHafner/FBD.jl
+using FBD.jl
 
 Z = [1,1,1,2,2]
 θ = 1:5
