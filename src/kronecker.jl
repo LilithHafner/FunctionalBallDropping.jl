@@ -19,13 +19,12 @@ kroneker model.
 
 Draw a hypergraph from the sampler with `rand(sampler, edges)`.
 """
-function Kronecker_sampler(initializer::AbstractArray, power::Integer, T::Type=Int, normalize=true)
-    is, ps = unzip(pairs(initializer))
-    is = Tuple.(vec(is))
-    dist = Categorical(vec(ps) ./ sum(ps))
+function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=Int, normalize=true)
+    is = Tuple.(vec(eachindex(IndexCartesian(), initializer)))
+    dist = Categorical(vec(initializer) ./ sum(initializer))
     if normalize
-        min = minimum.(unzip(is))
-        map!(i -> i.-min, is, is)
+        mn = minimum.(unzip(is))
+        map!(i -> i .- mn, is, is)
     end
     bits = maximum(maximum(used_bits.(i)) for i in is)
     k = length(axes(initializer))
