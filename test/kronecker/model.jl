@@ -28,13 +28,17 @@ end
     for (vals, p) in [((4,1,2), 3), ((3,3), 1), ((1,1), 12)]
         n = prod(vals)^p
         m = Int(floor(n*log(n)*3+100))
-        for size in [0, m]
-            s = Kronecker_sampler(ones(vals...), p; size=size)
+        for space in [0, m]
+            s = Kronecker_sampler(ones(vals...), p; space=space)
 
             g = rand(s, m)
 
             @test length(g) == m
             @test length(countmap(g)) == n
+
+            if length(countmap(g)) != n
+                println(vals, " ", p, " ", space)
+            end
         end
     end
 end
