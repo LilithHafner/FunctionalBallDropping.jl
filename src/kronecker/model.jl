@@ -7,15 +7,19 @@ struct Kronecker_sampler{T} <: Random.Sampler{Vector{T}} #TODO make edge size st
     bits::Int
     power::Int
     is::Vector{Vector{T}}
-    dist::Categorical{Float64, Vector{Float64}}
+    dist::Distributions.AliasTable
     remainder::Vector{Int}
 end
 
 """
-    Kronecker_sampler(initializer, power, T=Int)
+    Kronecker_sampler(initializer, power; T=Int, space=1)
 
 Create an efficient edge sampler whose probability distribution follows the specified
 kroneker model.
+
+Giving the sampler an adequite (but not excessive) amount of space may speed up generation
+by up to 2x. `space = edge_count ÷ 100` may be a good heuristic. The sampler will take up
+O(`sizeof(t)*ndims(initailizer)*space`) space with a constant factor around 4 bytes.
 
 Draw a hypergraph from the sampler with `rand(sampler, edges)`.
 """
@@ -30,7 +34,7 @@ function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=I
 
     initializer = kronecker_power(initializer, inner_power)
     is = [collect(Tuple(i)).-one(T) for i in vec(eachindex(IndexCartesian(), initializer))]
-    dist = Categorical(vec(initializer) ./ sum(initializer))
+    dist = sampler(Categorical(vec(initializer) ./ sum(initializer)))
 
     k = length(axes(initializer))
     bits = maximum(maximum(used_bits.(i)) for i in is)
@@ -46,7 +50,7 @@ end
 Draw an edge or a hypergraph with `e` edges from the sampler `s`.
 """
 function Base.rand(rng::AbstractRNG, s::Kronecker_sampler{T}) where T
-    edge = [T(v%r) for (v,r) in zip(s.is[rand(rng, s.dist)], s.remainder)]
+    edge = [T(v%r) for (v,r) in zip(s.is[rand(rng, s.dist)], s.remainder)] # TODO Could this line be simpler/faster?
     for i in 1:(s.power-1)
         for (j,v) in enumerate(s.is[rand(rng, s.dist)])
             edge[j] |= v << (i*s.bits)
