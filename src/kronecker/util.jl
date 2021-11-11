@@ -26,8 +26,8 @@ function kronecker_power(a::AbstractArray, power::Integer)
     if power < 0
         throw(ArgumentError("Power must be non-negative, got $power < 0."))
     elseif power == 0
-        out = similar(a, ())
-        out[] = one(eltype(a))
+        out = similar(a, ntuple(_->1, ndims(a)))
+        out[firstindex(out)] = one(eltype(a))
         return out
     else power == 1
         out = a

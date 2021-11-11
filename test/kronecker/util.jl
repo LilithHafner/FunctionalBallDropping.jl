@@ -5,7 +5,9 @@ end
 
 @testset "FBD.kronecker_product" begin
     a = [0 2; 3 4]
-    @test FBD.kronecker_power(a, 0) == reshape([1], ())
-    @test FBD.kronecker_power(a, 1) === a
-    @test FBD.kronecker_power(a, 2) == [0 0 0 4; 0 0 6 8; 0 6 0 8; 9 12 12 16]
+    p0, p1, p2 = FBD.kronecker_power.([a], 0:2)
+    @test p0 == reshape([1], (1,1))
+    @test p1 === a
+    @test p2 == [0 0 0 4; 0 0 6 8; 0 6 0 8; 9 12 12 16]
+    @test reduce(FBD.kronecker_product, [p0, p1, p0, p0, p1]) == p2
 end
