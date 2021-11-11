@@ -2,7 +2,7 @@ using Combinatorics: with_replacement_combinations
 using Distributions
 using StatsBase: countmap
 
-struct DCHSBM_sampler
+struct DCHSBM_sampler # TODO make fully parameterized & switch to Random.Sampler & internal AliasTable
     groups::AbstractVector
     ms::AbstractVector
     distribution_of_ms::Sampleable{Univariate, Discrete}

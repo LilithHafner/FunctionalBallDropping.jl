@@ -6,9 +6,8 @@ struct Kronecker_sampler{T} <: Random.Sampler{Vector{T}} #TODO make edge size st
     k::Int
     bits::Int
     power::Int
-    is::Vector{Vector{T}}
-    dist::Distributions.AliasTable
-    remainder::Vector{Int}
+    dist::AliasTable{Vector{T}, Vector{Vector{T}}}
+    remainder::Vector{T}
 end
 
 """
@@ -34,13 +33,13 @@ function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=I
 
     initializer = kronecker_power(initializer, inner_power)
     is = [collect(Tuple(i)).-one(T) for i in vec(eachindex(IndexCartesian(), initializer))]
-    dist = sampler(Categorical(vec(initializer) ./ sum(initializer)))
+    dist = AliasTable(vec(initializer), is)
 
     k = length(axes(initializer))
     bits = maximum(maximum(used_bits.(i)) for i in is)
     #bits = used_bits(maximum(size(initializer)).^inner_power)
 
-    Kronecker_sampler{T}(k, bits, outer_power, is, dist, remainder)
+    Kronecker_sampler{T}(k, bits, outer_power, dist, remainder)
 end
 
 """
@@ -50,9 +49,9 @@ end
 Draw an edge or a hypergraph with `e` edges from the sampler `s`.
 """
 function Base.rand(rng::AbstractRNG, s::Kronecker_sampler{T}) where T
-    edge = [T(v%r) for (v,r) in zip(s.is[rand(rng, s.dist)], s.remainder)] # TODO Could this line be simpler/faster?
+    edge = rand(rng, s.dist) .% s.remainder
     for i in 1:(s.power-1)
-        for (j,v) in enumerate(s.is[rand(rng, s.dist)])
+        for (j,v) in enumerate(rand(rng, s.dist))
             edge[j] |= v << (i*s.bits)
         end
     end
