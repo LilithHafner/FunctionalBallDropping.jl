@@ -1,6 +1,6 @@
 module FBD
 
-export DCHSBM_sampler, Kronecker_sampler
+export DCHSBM_sampler, Kronecker_sampler, AliasTable
 
 include("util.jl")
 

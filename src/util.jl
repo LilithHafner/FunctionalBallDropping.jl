@@ -21,7 +21,7 @@ function AliasTable(probs::AbstractVector{<:Real}, support::AbstractVector=OneTo
     AliasTable!(Float64.(probs), support)
 end
 function AliasTable!(probs::AbstractVector{Float64}, support::AbstractVector=OneToInf())
-    Base.require_one_based_indexing(probs, support)
+    Base.has_offset_axes(probs, support) && throw(ArgumentError("offset arrays are not supported but got an array with index other than 1"))
     n = length(probs)
     n > 0 || throw(ArgumentError("The input probability vector is empty."))
     checkbounds(Bool, support, axes(probs, 1)) || throw(BoundsError("probabilities extend past support"))
@@ -30,6 +30,9 @@ function AliasTable!(probs::AbstractVector{Float64}, support::AbstractVector=One
     AliasTable{eltype(support), typeof(support)}(probs, alias, support)
 end
 
+# with an alias table that has a high proportion of guaranteed acceptance, this can be
+# optimized to reduce the number of times u needs to be computed.
+# StatsBase.make_alias_table! does not produce such a table.
 function Random.rand(rng::AbstractRNG, s::AliasTable)
     i = rand(rng, eachindex(s.accept))
     u = rand(rng)

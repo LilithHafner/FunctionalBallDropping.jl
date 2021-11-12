@@ -1,6 +1,8 @@
 using FBD
 using Test
 
+include("util.jl")
+
 include("dchsbm/model.jl")
 include("kronecker/util.jl")
 #include("kronecker/model.jl") these tests are waiting on https://github.com/bramtayl/Unzip.jl/issues/7
