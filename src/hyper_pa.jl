@@ -1,4 +1,5 @@
 using Random
+using StatsBase: sample!
 using OffsetArrays
 #implements https://arxiv.org/pdf/2006.07060.pdf
 #strives to be thousands of times faster than https://github.com/manhtuando97/KDD-20-Hypergraph/blob/master/Code/Generator/hyper_preferential_attachment.py
@@ -6,7 +7,6 @@ using OffsetArrays
 function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Integer, nodes::I;
     rng::AbstractRNG=Random.default_rng()) where I <: Integer
 
-    bitvector = BitVector(undef, max_edgesize)
     edges = [[a,a+I(1)] for a in I(1):I(2):I(max_edgesize-1)]
     edges_by_size = [Vector{I}[] for _ in 1:max_edgesize]
     edges_by_size[2] = copy(edges)
@@ -14,10 +14,10 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
     for n in last(last(edges))+1:nodes
         for _ in 1:rand(degree_distribution)
             new_edgesize = rand(edgesize_distribution)
+            new_edge = Vector{I}(undef, new_edgesize)
+            new_edge[1] = n
 
-            if new_edgesize == 1
-                new_edge = [n]
-            else
+            if new_edgesize > 1
                 binom, acc = 1, 0
                 cum_sum = OffsetVector{Int}(undef, (new_edgesize-1):max_edgesize)
                 for source_edgesize in eachindex(cum_sum)
@@ -28,7 +28,7 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
                 total = last(cum_sum)
                 if total == 0
-                    new_edge = pick_rest(rng, n, 1:(n-1), new_edgesize-1, temp=bitvector)
+                    sample!(rng, 1:(n-1), (@view new_edge[2:end]), replace=false) # sample! mutates its 3rd argument only.
                 else
                     key = rand(rng, 1:total)
                     source_edgesize = firstindex(cum_sum)
@@ -42,7 +42,7 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
                     #Huzzah! and a specific source edge
 
-                    new_edge = pick_rest(rng, n, source_edge, new_edgesize-1, temp=bitvector)
+                    sample!(rng, source_edge, (@view new_edge[2:end]), replace=false) # sample! mutates its 3rd argument only.
 
                     #Huzzah! and an actual edge to use
                 end
@@ -55,40 +55,6 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
     end
 
     edges
-end
-
-function pick_rest(rng, fst, from, number_to_pick; temp)
-    if length(temp) < length(from)
-        resize!(temp, length(from))
-    end
-    out = Vector{typeof(fst)}(undef, 1+number_to_pick)
-    out[1] = fst
-    bv = @view temp[eachindex(from)]
-    use = if length(from)-number_to_pick < number_to_pick
-        (!).(set_true(rng, bv, length(from)-number_to_pick))
-    else
-        set_true(rng, bv, number_to_pick)
-    end
-    i = 2
-    for (f, v) in zip(from, use)
-        if v
-            out[i] = f
-            i += 1
-        end
-    end
-    out
-end
-function set_true(rng, bv, number_to_pick)
-    bv .= false
-    for _ in 1:number_to_pick
-        i = 0
-        while true
-             i = rand(rng, eachindex(bv))
-             bv[i] || break
-        end
-        bv[i] = true
-    end
-    bv
 end
 
 
@@ -109,7 +75,7 @@ function compute_time(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-H
     ps = params(name, nodes, path)
     m = @benchmark graph = hyper_pa($ps...)
     display(m)
-    time(median(m)/1e9)
+    time(median(m))/1e9
 end
 
 
