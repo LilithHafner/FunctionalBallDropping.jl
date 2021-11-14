@@ -11,6 +11,8 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
     edges_by_size = [Vector{I}[] for _ in 1:max_edgesize]
     edges_by_size[2] = copy(edges)
 
+    cum_sum_source = Vector{Int}(undef, max_edgesize)
+
     for n in last(last(edges))+1:nodes
         for _ in 1:rand(degree_distribution)
             new_edgesize = rand(edgesize_distribution)
@@ -19,7 +21,7 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
             if new_edgesize > 1
                 binom, acc = 1, 0
-                cum_sum = OffsetVector{Int}(undef, (new_edgesize-1):max_edgesize)
+                cum_sum = OffsetVector(view(cum_sum_source, 1:max_edgesize-new_edgesize+2), (new_edgesize-1):max_edgesize) #13%
                 for source_edgesize in eachindex(cum_sum)
                     acc += length(edges_by_size[source_edgesize])*binom
                     cum_sum[source_edgesize] = acc
@@ -76,6 +78,11 @@ function compute_time(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-H
     m = @benchmark graph = hyper_pa($ps...)
     display(m)
     time(median(m))/1e9
+end
+
+function profile(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-Hypergraph/")
+    ps = params(name, nodes, path)
+    Juno.@profiler for i in 1:30; graph = hyper_pa(ps...); end
 end
 
 
