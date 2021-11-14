@@ -48,6 +48,9 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
                     #Huzzah! and a specific source edge
 
+                    # This sampling takes ~38% of runtime. ~20% of that (~7.5% total) can be
+                    # alleviated by passing a workspace vector through. StatsBase doesn't
+                    # support that, though.
                     sample!(rng, source_edge, (@view new_edge[2:end]), replace=false) # sample! mutates its 3rd argument only.
 
                     #Huzzah! and an actual edge to use
@@ -86,7 +89,7 @@ end
 
 function profile(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-Hypergraph/")
     ps = params(name, nodes, path)
-    Juno.@profiler for i in 1:30; graph = hyper_pa(ps...); end
+    Juno.@profiler for i in 1:20; graph = hyper_pa(ps...); end
 end
 
 
