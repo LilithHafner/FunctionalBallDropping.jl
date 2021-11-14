@@ -13,6 +13,8 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
     cum_sum_source = Vector{Int}(undef, max_edgesize)
 
+    binomial_table = [binomial(a,b) for a in 1:max_edgesize, b in 1:max_edgesize-1]
+
     for n in last(last(edges))+1:nodes
         for _ in 1:rand(degree_distribution)
             new_edgesize = rand(edgesize_distribution)
@@ -20,12 +22,14 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
             new_edge[1] = n
 
             if new_edgesize > 1
-                binom, acc = 1, 0
+                #binom = 1
+                acc = 0
                 cum_sum = OffsetVector(view(cum_sum_source, 1:max_edgesize-new_edgesize+2), (new_edgesize-1):max_edgesize) #13%
                 for source_edgesize in eachindex(cum_sum)
+                    binom = binomial_table[source_edgesize,new_edgesize-1]
                     acc += length(edges_by_size[source_edgesize])*binom
                     cum_sum[source_edgesize] = acc
-                    binom = binom*(source_edgesize+1)÷(source_edgesize-new_edgesize+2)
+                    #binom = binom*(source_edgesize+1)÷(source_edgesize-new_edgesize+2)
                 end
 
                 total = last(cum_sum)
