@@ -50,3 +50,14 @@ function example(::Type{Kronecker_sampler}, size)
 
     rand(sampler, edges)
 end
+
+function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa], size=1_000_000, trials=5)
+    [begin
+        speed = median(begin
+            time = @elapsed graph = example(gen, size)
+            size = Base.summarysize(graph)
+            size/time
+        end for i in 1:trials)
+        gen => round(Integer, speed/10^6)
+    end for gen in generators]
+end
