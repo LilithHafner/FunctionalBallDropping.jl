@@ -65,39 +65,3 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
     edges
 end
-
-
-function params(name, nodes, path)
-    edgesize_distribution = read_probabilities(path * "Code/Generator/size distribution/" * name * " size distribution.txt")
-    degree_distribution = read_probabilities(path * "Code/Generator/simplex per node/" * name * "-simplices-per-node-distribution.txt")
-    max_edgesize = findlast(edgesize_distribution.accept .> 0)
-    degree_distribution, edgesize_distribution, max_edgesize, nodes
-end
-function main(name, nodes, path="/Users/x/Downloads/KDD-20-Hypergraph/")
-    ps = params(name, nodes, path)
-    @time graph = hyper_pa(ps...)
-    write_graph(path * "Code/Generator/julia_out/" * name * ".txt", graph)
-    graph
-end
-
-function compute_time(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-Hypergraph/")
-    ps = params(name, nodes, path)
-    m = @benchmark graph = hyper_pa($ps...)
-    display(m)
-    time(median(m))/1e9
-end
-
-function profile(name="DAWN", nodes=3029, path="/Users/x/Downloads/KDD-20-Hypergraph/")
-    ps = params(name, nodes, path)
-    Juno.@profiler for i in 1:20; graph = hyper_pa(ps...); end
-end
-
-
-@elapsed main("DAWN", 3029)
-
-#= Compare to:
-x@X Generator % time python3 hyper_preferential_attachment.py --name=DAWN --file_name=DAWN --num_nodes=3029 --simplex_per_node_directory='simplex per node' --size_distribution_directory='size distribution' --output_directory=output_directory
-done with DAWN
-python3 hyper_preferential_attachment.py --name=DAWN --file_name=DAWN      22469.39s user 1842.45s system 93% cpu 7:14:08.42 total
-x@X Generator %
-=#

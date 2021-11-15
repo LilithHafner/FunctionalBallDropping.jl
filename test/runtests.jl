@@ -4,6 +4,9 @@ using Test
 include("util.jl")
 
 include("dchsbm/model.jl")
+
+include("hyper_pa.jl")
+
 include("kronecker/util.jl")
 #include("kronecker/model.jl") these tests are waiting on https://github.com/bramtayl/Unzip.jl/issues/7
 printstyled("Kronecker model tests must be run manually with: include(\"test/kronecker/model.jl\")\n\n"; color=Base.warn_color())

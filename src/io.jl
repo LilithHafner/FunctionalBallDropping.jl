@@ -7,5 +7,4 @@ function write_graph(io::IOStream, edge_list::Vector{Vector{T}}) where T
         join(io, edge, ' ')
         println(io)
     end
-    #join(io, (join(edge, ' ') for edge in edge_list), '\n')
 end

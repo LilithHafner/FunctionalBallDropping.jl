@@ -1,4 +1,4 @@
-using FBD, Plots, Unzip
+using BenchmarkTools, FBD, Plots, Unzip
 include("../external/hyperkron.jl")
 
 function time_both(power)
