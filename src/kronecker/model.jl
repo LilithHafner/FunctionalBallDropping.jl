@@ -1,5 +1,4 @@
 using Distributions
-using Unzip: unzip
 using Random
 
 struct Kronecker_sampler{T} <: Random.Sampler{Vector{T}} #TODO make edge size static and edge type abstract
