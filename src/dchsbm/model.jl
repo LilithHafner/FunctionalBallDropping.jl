@@ -56,15 +56,34 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
     end
 
     ms = collect(with_replacement_combinations(axes(groups, 1), kmax))
-    ms_weights = [
-            (number_of_groups_affinity_function(m, scaling_factor)
-            * prod(group_sizes[m])
-            / prod(factorial.(values(countmap(m; alg=:dict)))))::Float64
-        for m in ms]
+    ms_weights = similar(ms, Float64)
+    for (i, m) in enumerate(ms)
+        a = number_of_groups_affinity_function(m, scaling_factor)
+        b = multiply_by_cell_count(a, group_sizes, m)
+        ms_weights[i] = b
+    end
     expected_edges = sum(ms_weights)
     distribution_of_ms = AliasTable(ms_weights, ms)
 
     DCHSBM_sampler(groups, distribution_of_ms, expected_edges)
+end
+
+function multiply_by_cell_count(x, group_sizes, m)
+    i0 = firstindex(m)
+    m0 = first(m)
+    i = i0 + 1
+    while true
+        if i > lastindex(m) || m[i] != m0
+            elements = i-i0
+            x *= binomial(group_sizes[m0]+elements-1, elements)
+            if i > lastindex(m)
+                return x
+            end
+            i0 = i
+            m0 = m[i]
+        end
+        i += 1
+    end
 end
 
 """
