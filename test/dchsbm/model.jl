@@ -19,7 +19,7 @@ degrees = countmap(reduce(append!, rand(sampler)))
     @test Set(keys(degrees)) == Set(axes(Z, 1))
 end
 
-tolerance = 4
+tolerance = 6
 max_rtol = ceil(tolerance/sqrt(minimum(values(degrees)))*10_000)/10_000
 @testset "degree distribution (rtol ≤ $max_rtol)" begin
     for group = [1:3, 4:5]
