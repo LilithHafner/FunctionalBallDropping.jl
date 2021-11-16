@@ -10,6 +10,7 @@ Base.iterate(::OneToInf, state=1) = (state, state+1)
 Base.eltype(::Type{OneToInf}) = Int
 Base.IteratorSize(::Type{OneToInf}) = Base.IsInfinite()
 Base.show(io::IO, X::OneToInf) = print(io, "OneToInf()")
+Base.:(==)(::OneToInf, ::OneToInf) = true
 
 struct AliasTable{T, S} <: Random.Sampler{T} where {S <: AbstractVector{T}}
     accept::Vector{Float64}
@@ -39,6 +40,8 @@ function Random.rand(rng::AbstractRNG, s::AliasTable)
     @inbounds s.support[u < s.accept[i] ? i : s.alias[i]]
 end
 
+Base.:(==)(a::AliasTable, b::AliasTable) =
+    a.accept == b.accept && a.support == b.support && a.alias[a.accept .!= 1] == b.alias[b.accept .!= 1]
 
 
 # I think this is faster to make, faster to sample, more general, and better integrated with
