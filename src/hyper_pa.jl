@@ -5,7 +5,7 @@ using OffsetArrays
 #strives to be thousands of times faster than https://github.com/manhtuando97/KDD-20-Hypergraph/blob/master/Code/Generator/hyper_preferential_attachment.py
 
 function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Integer, nodes::I;
-    rng::AbstractRNG=Random.default_rng()) where I <: Integer
+    rng::AbstractRNG=Random.GLOBAL_RNG) where I <: Integer
 
     edges = [[a,a+I(1)] for a in I(1):I(2):I(max_edgesize-1)]
     edges_by_size = [Vector{I}[] for _ in 1:max_edgesize]
