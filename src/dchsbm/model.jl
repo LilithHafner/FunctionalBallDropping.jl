@@ -2,11 +2,10 @@ using Combinatorics: with_replacement_combinations
 using Distributions
 using StatsBase: countmap
 
-struct DCHSBM_sampler{G <: AbstractVector, M <: AbstractVector, D <: Sampleable{Univariate, Discrete}, E <: Real} # TODO make fully parameterized & switch to Random.Sampler & internal AliasTable
-    groups::G
-    ms::M
-    distribution_of_ms::D
-    expected_edges::E
+struct DCHSBM_sampler{I <: Integer, R <: Real} # TODO make fully parameterized & switch to Random.Sampler
+    groups::Vector{AliasTable{I, UnitRange{I}}}
+    ms::AliasTable{Vector{I}, Vector{Vector{I}}}#TODO try inline groups
+    expected_edges::R
 end
 
 """
@@ -43,12 +42,15 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
         θ = θ[perm]
     end
 
-    groups, group_sizes, start = [], [], 1
+    I = eltype(Z)
+    groups = AliasTable{I, UnitRange{I}}[]
+    group_sizes = I[]
+    start = 1
     while start <= length(Z)
         next = start
         while next <= length(Z) && Z[next] == Z[start]; next += 1 end
         weights = θ[start:next-1]
-        push!(groups, sampler(DiscreteNonParametric(start:next-1, weights ./ sum(weights))))
+        push!(groups, AliasTable(weights, start:next-1))
         push!(group_sizes, next-start)
         start = next
     end
@@ -60,9 +62,9 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
             / prod(factorial.(values(countmap(m; alg=:dict)))))::Float64
         for m in ms]
     expected_edges = sum(ms_weights)
-    distribution_of_ms = sampler(Categorical(ms_weights ./ expected_edges))
+    distribution_of_ms = AliasTable(ms_weights, ms)
 
-    DCHSBM_sampler(groups, ms, distribution_of_ms, expected_edges)
+    DCHSBM_sampler(groups, distribution_of_ms, expected_edges)
 end
 
 """
@@ -83,5 +85,5 @@ Draw a hypergraph from the sampler `s`,
 optionally overriding the expected number of edges.
 """
 function Base.rand(s::DCHSBM_sampler; edges::Integer=rand_round(s.expected_edges))
-    [[rand(s.groups[group]) for group in s.ms[rand(s.distribution_of_ms)]] for _ in 1:edges]
+    [[rand(s.groups[group]) for group in rand(s.ms)] for _ in 1:edges]
 end

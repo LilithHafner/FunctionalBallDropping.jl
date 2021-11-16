@@ -1,11 +1,7 @@
 function example end
 
 function example(::Type{DCHSBM_sampler}, size)
-    if size < 1000 #TODO debug dchsbm (& profile)
-        size = 1000
-    end
-    nodes = size ÷ 1000
-    Z = vcat([fill(i, ceil(Integer, nodes*size)) for (i,size) in enumerate([.4,.1,.03,.2,.2,.07])]...)
+    Z = vcat([fill(i, ceil(Integer, size*proportion/1000)) for (i,proportion) in enumerate([.4,.1,.03,.2,.2,.07])]...)
     γ = 1.63
     θ = ((γ+1) .* rand(length(Z))) .^ (-γ-1)
     p = Float64(9.62*size/length(Z)^4)
