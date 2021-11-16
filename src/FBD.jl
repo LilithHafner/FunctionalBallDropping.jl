@@ -5,6 +5,7 @@ export example,
     AliasTable
 
 include("util.jl")
+include("io.jl")
 
 include("dchsbm/number_of_groups_affinity_function.jl")
 include("dchsbm/model.jl")
