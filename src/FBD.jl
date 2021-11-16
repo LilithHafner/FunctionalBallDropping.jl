@@ -6,7 +6,7 @@ export example,
 
 include("util.jl")
 
-include("../external/dchsbm/affinity_function.jl")
+include("dchsbm/number_of_groups_affinity_function.jl")
 include("dchsbm/model.jl")
 
 include("kronecker/util.jl")
