@@ -47,7 +47,15 @@ function example(::Type{Kronecker_sampler}, size)
     rand(sampler, edges)
 end
 
-function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa], size=1_000_000, trials=5)
+function example(::Type{Typing_sampler}, size)
+
+    sampler = Typing_sampler(3, .4, [.1, .2, .3], ['a', 'b', 'c'])
+
+    rand(sampler, size ÷ 210)
+
+end
+
+function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler], size=1_000_000, trials=5)
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)

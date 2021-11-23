@@ -5,7 +5,6 @@
         end
     end
     speeds = FBD.MBPS(size=10_000, trials=6)
-    @test length(speeds) == 3
     display(speeds)
     @test all(last.(speeds) .>= 3)
 end
