@@ -4,7 +4,7 @@ export example,
     DCHSBM_sampler, Kronecker_sampler, hyper_pa,
     AliasTable
 
-include("util.jl")
+include("alias_table.jl")
 include("io.jl")
 
 include("dchsbm/number_of_groups_affinity_function.jl")
