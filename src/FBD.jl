@@ -1,7 +1,7 @@
 module FBD
 
 export example,
-    DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler,
+    DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler,
     AliasTable
 
 include("alias_table.jl")
@@ -16,6 +16,8 @@ include("kronecker/model.jl")
 include("hyper_pa.jl")
 
 include("typing.jl")
+
+include("ER.jl")
 
 include("examples.jl")
 

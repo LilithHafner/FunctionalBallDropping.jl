@@ -8,7 +8,7 @@ sampler = ER_sampler(N, kmax, P)
 graph = rand(sampler)
 
 for i in graph
-    println(i)
+    #println(i)
 end
 
 @testset "shape" begin
