@@ -44,5 +44,5 @@ function rand_round(x::Real)
 end
 
 function Base.rand(s::ER_sampler; edges::Integer=rand_round(s.expected_edges))
-    [[rand(1:s.N) for node in s.kmax] for _ in 1:edges]
+    [[rand(1:s.N) for node in 1:s.kmax] for _ in 1:edges]
 end
