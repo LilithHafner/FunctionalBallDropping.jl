@@ -1,3 +1,20 @@
+"""
+    example(Model, size)
+
+generates an example graph using model `Model` and size in bytes of approximately `size`.
+
+# Examples
+
+    example(DCHSBM_sampler, 1000)
+
+    example(hyper_pa, 1_000_000)
+
+    example(Kronecker_sampler, 100)
+
+    example(Typing_sampler, 10_000)
+
+    example(ER_sampler, 100_000)
+"""
 function example end
 
 function example(::Type{DCHSBM_sampler}, size)
