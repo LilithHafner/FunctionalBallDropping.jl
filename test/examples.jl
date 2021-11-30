@@ -5,6 +5,8 @@
         end
     end
     speeds = MBPS(size=10_000, trials=6)
+    println()
     display(speeds)
+    println("\n")
     @test all(last.(speeds) .>= 3)
 end
