@@ -4,7 +4,7 @@
             @test example(generator, size) isa Vector{Vector{Int}}
         end
     end
-    speeds = FBD.MBPS(size=10_000, trials=6)
+    speeds = MBPS(size=10_000, trials=6)
     display(speeds)
     @test all(last.(speeds) .>= 3)
 end
