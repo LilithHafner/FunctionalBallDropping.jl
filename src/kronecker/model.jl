@@ -3,10 +3,10 @@ using Random
 
 struct Kronecker_sampler{T} <: Random.Sampler{Vector{T}} #TODO make edge size static and edge type abstract
     k::Int
-    bits::Int
     power::Int
     dist::AliasTable{Vector{T}, Vector{Vector{T}}}
-    remainder::Vector{T}
+    initializer_size::T
+    remainder::T
 end
 
 """
@@ -26,19 +26,19 @@ function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=I
     outer_power = cld(power, inner_power))
 
     Base.require_one_based_indexing(initializer)
+    initializer_size = first(size(initializer))
+    all(size(initializer) .== initializer_size) || ArgumentError("initializer must be square")
 
     inner_power = cld(power, outer_power)
-    remainder = collect(size(initializer)) .^ (power - inner_power*(outer_power-1))
+    remainder = initializer_size ^ (power - inner_power*(outer_power-1))
 
     initializer = kronecker_power(initializer, inner_power)
     is = [collect(Tuple(i)).-one(T) for i in vec(eachindex(IndexCartesian(), initializer))]
     dist = AliasTable(vec(initializer), is)
 
     k = length(axes(initializer))
-    bits = maximum(maximum(used_bits.(i)) for i in is)
-    #bits = used_bits(maximum(size(initializer)).^inner_power)
 
-    Kronecker_sampler{T}(k, bits, outer_power, dist, remainder)
+    Kronecker_sampler{T}(k, outer_power, dist, initializer_size, remainder)
 end
 
 """
@@ -48,11 +48,11 @@ end
 Draw an edge or a hypergraph with `e` edges from the sampler `s`.
 """
 function Base.rand(rng::AbstractRNG, s::Kronecker_sampler{T}) where T
-    edge = rand(rng, s.dist) .% s.remainder
-    for i in 1:(s.power-1)
-        for (j,v) in enumerate(rand(rng, s.dist))
-            edge[j] |= v << (i*s.bits)
-        end
+    mult = s.remainder
+    edge = rand(rng, s.dist) .% mult
+    for _ in 1:(s.power-1)
+        edge .+= rand(rng, s.dist) .* mult
+        mult *= s.initializer_size
     end
     edge
 end
