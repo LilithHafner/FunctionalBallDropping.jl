@@ -7,9 +7,9 @@
             @test example(generator, size) isa Vector{<:NTuple}
         end
     end
-    speeds = MBPS(size=10_000, trials=6)
-    println()
-    display(speeds)
+    println("\nMB per second")
+    display(FBD.MBPS(size=10_000, trials=6))
+    println("\n\nMillions of entries per second")
+    display(MEPS(size=10_000, trials=6))
     println("\n")
-    @test all(last.(speeds) .>= 3)
 end

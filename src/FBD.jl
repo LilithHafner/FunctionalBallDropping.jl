@@ -1,6 +1,6 @@
 module FBD
 
-export example, MBPS,
+export example, MEPS,
     DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler,
     AliasTable
 
