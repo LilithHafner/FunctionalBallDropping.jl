@@ -4,22 +4,22 @@ using StatsBase
 @testset "shape" begin
     s = Kronecker_sampler([1,2,3,4], 2)
     e = rand(s)
-    @test typeof(e) == Vector{Int}
-    @test size(e) == (1,)
+    @test typeof(e) == Tuple{Int}
+    @test length(e) == 1
     g = rand(s, 7)
     @test eltype(g) == typeof(e)
     @test axes(first(g)) == axes(e)
-    @test typeof(g) == Vector{Vector{Int}}
+    @test typeof(g) == Vector{Tuple{Int}}
     @test size(g) == (7,)
 
     s = Kronecker_sampler(rand(2,3,1), 2)
     e = rand(s)
-    @test typeof(e) == Vector{Int}
-    @test size(e) == (3,)
+    @test typeof(e) == NTuple{3, Int}
+    @test length(e) == 3
     g = rand(s, 3, 3)
     @test eltype(g) == typeof(e)
     @test axes(first(g)) == axes(e)
-    @test typeof(g) == Matrix{Vector{Int}}
+    @test typeof(g) == Matrix{NTuple{3, Int}}
     @test size(g) == (3, 3)
 end
 

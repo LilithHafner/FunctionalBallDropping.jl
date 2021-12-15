@@ -1,10 +1,10 @@
 using Distributions
 using Random
+using StaticArrays
 
-struct Kronecker_sampler{T} <: Random.Sampler{Vector{T}} #TODO make edge size static and edge type abstract
-    k::Int
+struct Kronecker_sampler{T, K} <: Random.Sampler{NTuple{K, T}} #TODO make edge type abstract
     power::Int
-    dist::AliasTable{Vector{T}, Vector{Vector{T}}}
+    dist::AliasTable{NTuple{K, T}, Vector{NTuple{K, T}}}
     initializer_size::T
     remainder::T
 end
@@ -33,12 +33,12 @@ function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=I
     remainder = initializer_size ^ (power - inner_power*(outer_power-1))
 
     initializer = kronecker_power(initializer, inner_power)
-    is = [collect(Tuple(i)).-one(T) for i in vec(eachindex(IndexCartesian(), initializer))]
+    is = [Tuple(i).-one(T) for i in vec(eachindex(IndexCartesian(), initializer))]
     dist = AliasTable(vec(initializer), is)
 
-    k = length(axes(initializer))
+    K = ndims(initializer)
 
-    Kronecker_sampler{T}(k, outer_power, dist, initializer_size, remainder)
+    Kronecker_sampler{T, K}(outer_power, dist, initializer_size, remainder)
 end
 
 """
@@ -47,12 +47,12 @@ end
 
 Draw an edge or a hypergraph with `e` edges from the sampler `s`.
 """
-function Base.rand(rng::AbstractRNG, s::Kronecker_sampler{T}) where T
+function Base.rand(rng::AbstractRNG, s::Kronecker_sampler{T, K}) where {T, K}
     mult = s.remainder
-    edge = rand(rng, s.dist) .% mult
+    edge = MVector{K}(rand(rng, s.dist)) .% mult
     for _ in 1:(s.power-1)
         edge .+= rand(rng, s.dist) .* mult
         mult *= s.initializer_size
     end
-    edge
+    NTuple{K}(edge)
 end
