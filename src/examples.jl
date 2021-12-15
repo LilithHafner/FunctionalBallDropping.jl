@@ -74,9 +74,11 @@ end
 
 function example(::Type{ER_sampler}, size)
 
-    sampler = ER_sampler(size, 4)
+    s = round(Integer, ∛(size ÷ 8))
 
-    rand(sampler, size ÷ 40)
+    sampler = ER_sampler(size, s)
+
+    rand(sampler, s^2)
 
 end
 
