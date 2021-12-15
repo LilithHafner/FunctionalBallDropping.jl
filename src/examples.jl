@@ -28,7 +28,7 @@ function example(::Type{DCHSBM_sampler}, size)
     rand(sampler)
 end
 
-function example(::typeof(hyper_pa),size)
+function example(::typeof(hyper_pa), size)
     degree_distribution = AliasTable([1,415,267,152,140,101,93,66,61,47,53,36,44,30,36,32,29,25,31,21,
     16,16,23,21,16,15,18,19,12,20,12,5,12,19,13,11,13,12,6,9,10,11,4,15,5,6,6,7,4,7,7,6,2,6,8,6,5,1,8,
     10,8,3,1,7,3,4,4,3,5,5,4,3,4,4,5,3,2,3,7,5,4,3,2,3,3,2,5,4,1,2,4,4,3,4,1,2,2,2,4,3,1,5,6,1,4,1,4,2,
