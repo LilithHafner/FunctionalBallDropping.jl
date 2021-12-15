@@ -76,8 +76,7 @@ function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)
-            size = Base.summarysize(graph)
-            size/time
+            Base.summarysize(graph)/time
         end for i in 1:trials)
         gen => round(Integer, speed/10^6)
     end for gen in generators]
