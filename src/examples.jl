@@ -81,3 +81,13 @@ function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing
         gen => round(Integer, speed/10^6)
     end for gen in generators]
 end
+
+function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler], size=1_000_000, trials=5)
+    [begin
+        speed = median(begin
+            time = @elapsed graph = example(gen, size)
+            sum(length.(graph))/time
+        end for i in 1:trials)
+        gen => round(Integer, speed/10^6)
+    end for gen in generators]
+end
