@@ -74,11 +74,9 @@ end
 
 function example(::Type{ER_sampler}, size)
 
-    nodes = min(100_000, size) # a million overflows
+    sampler = ER_sampler(size, 4)
 
-    sampler = ER_sampler(nodes, 4, size*3/float(nodes)^4/10)
-
-    rand(sampler)
+    rand(sampler, size ÷ 40)
 
 end
 
