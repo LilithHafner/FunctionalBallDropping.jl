@@ -82,7 +82,15 @@ function example(::Type{ER_sampler}, size)
 
 end
 
-function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler], size=1_000_000, trials=5)
+function example(::typeof(er), size)
+
+    s = round(Integer, ∛(size ÷ 8))
+
+    er(size, s^2, s)
+
+end
+
+function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=1_000_000, trials=5)
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)
@@ -92,7 +100,7 @@ function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing
     end for gen in generators]
 end
 
-function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler], size=1_000_000, trials=5)
+function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=1_000_000, trials=5)
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)
