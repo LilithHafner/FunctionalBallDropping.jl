@@ -2,14 +2,13 @@ using Combinatorics: with_replacement_combinations
 using Distributions
 using StatsBase: countmap
 
-struct DCHSBM_sampler{I <: Integer, R <: Real} # TODO make fully parameterized & switch to Random.Sampler
+struct DCHSBM_sampler{K, I <: Integer} <: Random.Sampler{NTuple{K, I}} # TODO make fully parameterized
     groups::Vector{AliasTable{I, UnitRange{I}}}
-    ms::AliasTable{Vector{I}, Vector{Vector{I}}}#TODO try inline groups
-    expected_edges::R
+    ms::AliasTable{NTuple{K, I}, Vector{NTuple{K, I}}}#TODO try inline groups
 end
 
 """
-    DCHSBM_sampler(Z, θ, kmax[, scaling_factor])
+    DCHSBM_sampler(Z, θ, kmax)
 
 Create a hypergraph sampler whose probability distribution follows the specified
 degree corrected hyperstochastic block model.
@@ -20,7 +19,6 @@ Draw a hypergraph from the sampler with `rand(sampler)`.
 - `Z::AbstractVector{<:Integer}` the group assignment of each node
 - `θ::AbstractVector{<:Real}` the degree correction weight of each node.
 - `kmax::Integer` is the largest possible hyperedge size the graph will generate
-- `scaling_factor::Float64` is the largest equivalent edge-placement probability for the graph
 `Z` and `θ` must have the same length.
 
 # Runtime
@@ -33,7 +31,7 @@ Sampling:
 O(`edges * kmax`) ≈
 150ns * edges * kmax + 1300ns * edges
 """
-function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer, scaling_factor::Float64)
+function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer)
     #Note that sorting is O(n) here with a moderate constant factor, and sort checking is practically free
     @assert axes(Z) == axes(θ)
     if !issorted(Z)
@@ -58,14 +56,14 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
     ms = collect(with_replacement_combinations(axes(groups, 1), kmax))
     ms_weights = similar(ms, Float64)
     for (i, m) in enumerate(ms)
-        a = number_of_groups_affinity_function(m, scaling_factor)
+        a = number_of_groups_affinity_function(m, 0.5)
         b = multiply_by_cell_count(a, group_sizes, m)
         ms_weights[i] = b
     end
     expected_edges = sum(ms_weights)
-    distribution_of_ms = AliasTable(ms_weights, ms)
+    distribution_of_ms = AliasTable(ms_weights, Tuple.(ms))
 
-    DCHSBM_sampler(groups, distribution_of_ms, expected_edges)
+    DCHSBM_sampler(groups, distribution_of_ms)
 end
 
 function multiply_by_cell_count(x, group_sizes, m)
@@ -87,22 +85,10 @@ function multiply_by_cell_count(x, group_sizes, m)
 end
 
 """
-    rand_round(x::Real)
-
-Round a number to one of the two nearest integers according to proximity so that
-the expectation value of `rand_round(x)` is `x`.
-"""
-function rand_round(x::Real)
-    n = Int(floor(x))
-    n + (rand() < (x-n))
-end
-
-"""
     rand(s::DCHSBM_sampler[, edges::Integer])
 
-Draw a hypergraph from the sampler `s`,
-optionally overriding the expected number of edges.
+Draw a hypergraph from the sampler `s` with `edges` edges
 """
-function Base.rand(s::DCHSBM_sampler; edges::Integer=rand_round(s.expected_edges))
-    [[rand(s.groups[group]) for group in rand(s.ms)] for _ in 1:edges]
+function Base.rand(rng::AbstractRNG, s::DCHSBM_sampler)
+    map(group -> rand(rng, s.groups[group]), rand(rng, s.ms))
 end

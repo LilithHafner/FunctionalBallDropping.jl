@@ -21,11 +21,10 @@ function example(::Type{DCHSBM_sampler}, size)
     Z = vcat([fill(i, ceil(Integer, size*proportion/1000)) for (i,proportion) in enumerate([.4,.1,.03,.2,.2,.07])]...)
     γ = 1.63
     θ = ((γ+1) .* rand(length(Z))) .^ (-γ-1)
-    p = Float64(9.62*size/length(Z)^4)
 
-    sampler = DCHSBM_sampler(Z, θ, 4, Float64(9.62*size/length(Z)^4))
+    sampler = DCHSBM_sampler(Z, θ, 4)
 
-    rand(sampler)
+    rand(sampler, size ÷ 32)
 end
 
 function example(::typeof(hyper_pa), size)
