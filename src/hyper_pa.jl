@@ -2,7 +2,7 @@ using Random
 using StatsBase: sample!
 using OffsetArrays
 #implements https://arxiv.org/pdf/2006.07060.pdf
-#strives to be thousands of times faster than https://github.com/manhtuando97/KDD-20-Hypergraph/blob/master/Code/Generator/hyper_preferential_attachment.py
+#thousands of times faster than https://github.com/manhtuando97/KDD-20-Hypergraph/blob/master/Code/Generator/hyper_preferential_attachment.py
 
 function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Integer, nodes::I;
     rng::AbstractRNG=Random.GLOBAL_RNG) where I <: Integer
