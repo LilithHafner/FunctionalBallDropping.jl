@@ -1,19 +1,19 @@
 """
     example(Model, size)
 
-generates an example graph using model `Model` and size in bytes of approximately `size`.
+generates an example graph using model `Model` and `hypergraphsize` of approximately `size`.
 
 # Examples
 
-    example(DCHSBM_sampler, 1000)
+    example(DCHSBM_sampler, 100)
 
-    example(hyper_pa, 1_000_000)
+    example(hyper_pa, 1_000_00)
 
-    example(Kronecker_sampler, 100)
+    example(Kronecker_sampler, 10)
 
-    example(Typing_sampler, 10_000)
+    example(Typing_sampler, 10_00)
 
-    example(ER_sampler, 100_000)
+    example(ER_sampler, 100_00)
 """
 function example end
 
@@ -24,7 +24,7 @@ function example(::Type{DCHSBM_sampler}, size)
 
     sampler = DCHSBM_sampler(Z, θ, 4)
 
-    rand(sampler, size ÷ 32)
+    rand(sampler, size ÷ 4)
 end
 
 function example(::typeof(hyper_pa), size)
@@ -49,14 +49,14 @@ function example(::typeof(hyper_pa), size)
 
     max_edgesize = length(edgesize_distribution.accept)
 
-    nodes = size ÷ 4000 + 16
+    nodes = size ÷ 222 + 18
 
     hyper_pa(degree_distribution, edgesize_distribution, max_edgesize, nodes)
 end
 
 function example(::Type{Kronecker_sampler}, size)
     initializer = cat([0.99 0.2; 0.2 0.3], [0.2 0.3; 0.3 0.05], dims=3)#[0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
-    edges = size ÷ 72
+    edges = size ÷ 3
 
     sampler = Kronecker_sampler(initializer, floor(Integer, log(size)), space=edges÷100)
 
@@ -67,13 +67,13 @@ function example(::Type{Typing_sampler}, size)
 
     sampler = Typing_sampler(3, .4, [.1, .2, .3], ['a', 'b', 'c'])
 
-    rand(sampler, size ÷ 210)
+    rand(sampler, size ÷ 3)
 
 end
 
 function example(::Type{ER_sampler}, size)
 
-    s = round(Integer, ∛(size ÷ 8))
+    s = round(Integer, ∛size)
 
     sampler = ER_sampler(size, s)
 
@@ -83,23 +83,15 @@ end
 
 function example(::typeof(er), size)
 
-    s = round(Integer, ∛(size ÷ 8))
+    s = round(Integer, ∛size)
 
     er(size, s^2, s)
 
 end
 
-function MBPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=1_000_000, trials=5)
-    [begin
-        speed = median(begin
-            time = @elapsed graph = example(gen, size)
-            Base.summarysize(graph)/time
-        end for i in 1:trials)
-        gen => round(Integer, speed/10^6)
-    end for gen in generators]
-end
+hypergraphsize(graph) = sum(length.(graph))
 
-function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=1_000_000, trials=5)
+function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=100_000, trials=5)
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)

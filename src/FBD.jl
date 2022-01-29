@@ -2,7 +2,7 @@ module FBD
 
 export example, MEPS,
     DCHSBM_sampler, Kronecker_sampler, Typing_sampler, ER_sampler,
-    hyper_pa, er, 
+    hyper_pa, er,
     AliasTable
 
 include("alias_table.jl")

@@ -7,9 +7,7 @@
             @test example(generator, size) isa Vector{<:NTuple}
         end
     end
-    println("\nMB per second")
-    display(FBD.MBPS(size=10_000, trials=6))
-    println("\n\nMillions of entries per second")
+    println("\nMillions of entries per second")
     display(MEPS(size=10_000, trials=6))
     println("\n")
 end
