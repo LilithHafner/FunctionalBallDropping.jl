@@ -1,7 +1,7 @@
 """
     example(Model, size)
 
-generates an example graph using model `Model` and `hypergraphsize` of approximately `size`.
+generates an example graph using model `Model` with `hypergraphsize` of approximately `size`.
 
 # Examples
 
