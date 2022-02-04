@@ -55,7 +55,7 @@ function example(::typeof(hyper_pa), size)
 end
 
 function example(::Type{Kronecker_sampler}, size)
-    initializer = cat([0.99 0.2; 0.2 0.3], [0.2 0.3; 0.3 0.05], dims=3)#[0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
+    initializer = [0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
     edges = size ÷ 3
 
     sampler = Kronecker_sampler(initializer, max(1, floor(Integer, log(size))), space=edges÷100)

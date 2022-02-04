@@ -21,9 +21,9 @@ O(`sizeof(t)*ndims(initailizer)*space`) space with a constant factor around 4 by
 
 Draw a hypergraph from the sampler with `rand(sampler, edges)`.
 """
-function Kronecker_sampler(initializer::AbstractArray, power::Integer; T::Type=Int, space=1,
+function Kronecker_sampler(initializer::AbstractArray, power::Integer; Type::Type{T}=Int, space=1,
     inner_power = max(1, min(power, Int(log(max(1,space)) ÷ log(max(2,length(initializer)))))),
-    outer_power = cld(power, inner_power))
+    outer_power = cld(power, inner_power)) where T <: Integer
 
     Base.require_one_based_indexing(initializer)
     initializer_size = first(size(initializer))
