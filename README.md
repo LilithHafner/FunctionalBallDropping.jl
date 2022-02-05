@@ -9,25 +9,23 @@ Usage:
 
 ```jl
 ]add https://github.com/LilithHafner/FBD.jl
-using FBD.jl
-
-Z = [1,1,1,2,2]
-θ = 1:5
-kmax = 3
-scaling_factor = 1
-sampler = DCHSBM_sampler(Z, θ, kmax, Float64(scaling_factor))
-
-graph = rand(sampler)
-
+using FBD
+graph = example(Kronecker_sampler, 30)
 display(graph)
 ```
 
 ```jl
-6-element Vector{Vector{Int64}}:
- [1, 3, 3]
- [2, 2, 2]
- [2, 2, 2]
- [3, 3, 3]
- [3, 2, 2]
- [3, 1, 2]
+10-element Vector{Tuple{Int64, Int64, Int64}}:
+ (6, 0, 2)
+ (3, 0, 0)
+ (0, 5, 5)
+ (1, 2, 2)
+ (4, 2, 1)
+ (0, 4, 0)
+ (2, 6, 4)
+ (1, 4, 5)
+ (5, 7, 6)
+ (0, 2, 0)
 ```
+
+See [`src/examples.jl`](src/examples.jl) for examples!
