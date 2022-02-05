@@ -18,7 +18,7 @@ generates an example graph using model `Model` with `hypergraphsize` of approxim
 function example end
 
 function example(::Type{DCHSBM_sampler}, size)
-    Z = vcat([fill(i, ceil(Integer, size*proportion/1000)) for (i,proportion) in enumerate([.4,.1,.03,.2,.2,.07])]...)
+    Z = vcat([fill(i, ceil(Integer, ∛size*proportion)) for (i,proportion) in enumerate([.4,.1,.03,.2,.2,.07])]...)
     γ = 1.63
     θ = ((γ+1) .* rand(length(Z))) .^ (-γ-1)
 
