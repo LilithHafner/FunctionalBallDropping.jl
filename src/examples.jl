@@ -56,6 +56,10 @@ end
 
 function example(::Type{Kronecker_sampler}, size)
     initializer = [0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
+    @static if VERSION < v"1.7"
+        initializer = reshape(initializer, (2,2,2))
+    end
+
     edges = size ÷ 3
 
     sampler = Kronecker_sampler(initializer, max(1, floor(Integer, log(size))), space=edges÷100)
