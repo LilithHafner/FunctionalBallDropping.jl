@@ -1,6 +1,5 @@
-using Combinatorics: with_replacement_combinations
 using Distributions
-using StatsBase: countmap
+using StaticArrays
 
 struct DCHSBM_sampler{K, I <: Integer} <: Random.Sampler{NTuple{K, I}} # TODO make fully parameterized
     groups::Vector{AliasTable{I, UnitRange{I}}}
@@ -31,7 +30,9 @@ Sampling:
 O(`edges * kmax`) ≈
 150ns * edges * kmax + 1300ns * edges
 """
-function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer)
+DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer) =
+    DCHSBM_sampler(Z, θ, Val{kmax}())
+function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Val{K}) where K
     #Note that sorting is O(n) here with a moderate constant factor, and sort checking is practically free
     @assert axes(Z) == axes(θ)
     if !issorted(Z)
@@ -53,7 +54,7 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
         start = next
     end
 
-    ms = collect(with_replacement_combinations(axes(groups, 1), kmax))
+    ms = with_replacement_combinations(length(groups), kmax)
     ms_weights = similar(ms, Float64)
     for (i, m) in enumerate(ms)
         a = number_of_groups_affinity_function(m, 0.5)
@@ -61,9 +62,27 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
         ms_weights[i] = b
     end
     expected_edges = sum(ms_weights)
-    distribution_of_ms = AliasTable(ms_weights, Tuple.(ms))
+    distribution_of_ms = AliasTable!(ms_weights, ms)
 
     DCHSBM_sampler(groups, distribution_of_ms)
+end
+
+
+function with_replacement_combinations(n::Integer, k::Val{K}) where K
+    m = @MVector fill(1, K)
+    out = Vector{NTuple{K, typeof(n)}}(undef, binomial(n+K-1, K))
+    for i in eachindex(out)
+        out[i] = Tuple(m)
+        for j in eachindex(m)
+            if j == K || m[j] < m[j+1]
+                m[j] += 1
+                break
+            else
+                m[j] = 1
+            end
+        end
+    end
+    out
 end
 
 function multiply_by_cell_count(x, group_sizes, m)

@@ -10,7 +10,7 @@ Parameters:
 * multiset is a vector of integers denoting which block we are working with
 * scaling_factor is a floating point number that signifies the highest possible edge placement probability
 """
-function number_of_groups_affinity_function(multiset::Vector{Int64}, scaling_factor::Float64)
+function number_of_groups_affinity_function(multiset, scaling_factor::Float64)
     count = 0
     group_count = 0
     max = 0
