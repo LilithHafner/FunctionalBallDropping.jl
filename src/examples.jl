@@ -21,8 +21,9 @@ function example(::Type{DCHSBM_sampler}, size)
     Z = vcat([fill(i, ceil(Integer, ∛size*proportion)) for (i,proportion) in enumerate([.4,.1,.03,.2,.2,.07])]...)
     γ = 1.63
     θ = ((γ+1) .* rand(length(Z))) .^ (-γ-1)
-
-    sampler = DCHSBM_sampler(Z, θ, 4)
+    intensity = inverse_power_intensity_function(8)
+    
+    sampler = DCHSBM_sampler(intensity, Z, θ, 4)
 
     rand(sampler, size ÷ 4)
 end

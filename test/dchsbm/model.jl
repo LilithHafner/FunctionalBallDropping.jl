@@ -1,13 +1,14 @@
 using StatsBase: countmap
 
-rand(DCHSBM_sampler([1,1,1,2,2], fill(1, 5), 3), 10)
-rand(DCHSBM_sampler(repeat(1:3, inner=10000000), fill(1, 30000000), 2))
+rand(DCHSBM_sampler(x->1, [1,1,1,2,2], fill(1, 5), 3), 10)
+rand(DCHSBM_sampler(x->1/FBD.sorted_unique_count(x)^2, repeat(1:3, inner=10000000), fill(1, 30000000), 2))
 
 Z = [1,1,1,2,2]
 θ = 1:5
 kmax = 3
 m = 1_000_000
-sampler = DCHSBM_sampler(Z, θ, kmax)
+intensity = x -> hash(x)/typemax(UInt)+1 # determinitic random ∈ [1,2]
+sampler = DCHSBM_sampler(intensity, Z, θ, kmax)
 
 graph = rand(sampler, m)
 

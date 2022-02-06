@@ -30,9 +30,9 @@ Sampling:
 O(`edges * kmax`) ≈
 150ns * edges * kmax + 1300ns * edges
 """
-DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer) =
-    DCHSBM_sampler(Z, θ, Val{kmax}())
-function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Val{K}) where K
+DCHSBM_sampler(intensity::Function, Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Integer) =
+    DCHSBM_sampler(intensity, Z, θ, Val{kmax}())
+function DCHSBM_sampler(intensity::Function, Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}, kmax::Val{K}) where K
     #Note that sorting is O(n) here with a moderate constant factor, and sort checking is practically free
     @assert axes(Z) == axes(θ)
     if !issorted(Z)
@@ -57,7 +57,7 @@ function DCHSBM_sampler(Z::AbstractVector{<:Integer}, θ::AbstractVector{<:Real}
     ms = with_replacement_combinations(length(groups), kmax)
     ms_weights = similar(ms, Float64)
     for (i, m) in enumerate(ms)
-        a = number_of_groups_affinity_function(m, 0.5)
+        a = intensity(m)
         b = multiply_by_cell_count(a, group_sizes, m)
         ms_weights[i] = b
     end

@@ -8,7 +8,7 @@ export example, MEPS, hypergraphsize,
 include("alias_table.jl")
 include("io.jl")
 
-include("dchsbm/number_of_groups_affinity_function.jl")
+include("dchsbm/intensity_functions.jl")
 include("dchsbm/model.jl")
 
 include("kronecker/util.jl")
