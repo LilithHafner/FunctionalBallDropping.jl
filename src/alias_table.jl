@@ -27,7 +27,9 @@ function AliasTable!(probs::AbstractVector{Float64}, support::AbstractVector=One
     n > 0 || throw(ArgumentError("The input probability vector is empty."))
     checkbounds(Bool, support, axes(probs, 1)) || throw(BoundsError("probabilities extend past support"))
     alias = similar(probs, Int)
-    make_alias_table!(probs, sum(probs), probs, alias)
+    sum_probs = sum(probs)
+    0 < sum_probs < Inf || throw(ArgumentError("sum(probs) = $sum_probs"))
+    make_alias_table!(probs, sum_probs, probs, alias)
     AliasTable{eltype(support), typeof(support)}(probs, alias, support)
 end
 
