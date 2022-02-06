@@ -85,6 +85,8 @@ function with_replacement_combinations(n::Integer, k::Val{K}) where K
     out
 end
 
+# multiply_by_cell_count could be integrated into with_replacement_combinations to get
+# asymtotic speedups for sparse graphs
 function multiply_by_cell_count(x, group_sizes, m)
     i0 = firstindex(m)
     m0 = first(m)
