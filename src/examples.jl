@@ -22,7 +22,7 @@ function example(::Type{DCHSBM_sampler}, size)
     γ = 1.63
     θ = ((γ+1) .* rand(length(Z))) .^ (-γ-1)
     intensity = inverse_power_intensity_function(8)
-    
+
     sampler = DCHSBM_sampler(intensity, Z, θ, 4)
 
     rand(sampler, size ÷ 4)
@@ -56,6 +56,7 @@ function example(::typeof(hyper_pa), size)
 end
 
 function example(::Type{Kronecker_sampler}, size)
+    # parameters copied from https://www.cs.purdue.edu/homes/dgleich/codes/hyperkron/
     initializer = [0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
     @static if VERSION < v"1.7"
         initializer = reshape(initializer, (2,2,2))
