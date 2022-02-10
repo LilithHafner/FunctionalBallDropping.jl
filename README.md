@@ -1,6 +1,6 @@
 # Functional Ball Dropping
 
-## a unification of (clustered) (hyper)-graph generation
+## fast hypergraph generation
 
 [![Build Status](https://github.com/LilithHafner/FBD.jl/workflows/CI/badge.svg)](https://github.com/LilithHafner/FBD.jl/actions)
 [![Coverage](https://codecov.io/gh/LilithHafner/FBD.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/LilithHafner/FBD.jl)
