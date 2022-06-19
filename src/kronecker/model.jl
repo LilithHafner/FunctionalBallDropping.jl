@@ -27,7 +27,7 @@ function Kronecker_sampler(initializer::AbstractArray, power::Integer; Type::Typ
 
     Base.require_one_based_indexing(initializer)
     initializer_size = first(size(initializer))
-    all(size(initializer) .== initializer_size) || ArgumentError("initializer must be square")
+    all(==(initializer_size), size(initializer)) || ArgumentError("initializer must be square")
 
     inner_power = cld(power, outer_power)
     remainder = initializer_size ^ (power - inner_power*(outer_power-1))
