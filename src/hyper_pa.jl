@@ -48,10 +48,13 @@ function hyper_pa(degree_distribution, edgesize_distribution, max_edgesize::Inte
 
                     #Huzzah! and a specific source edge
 
-                    # This sampling takes ~38% of runtime. ~20% of that (~7.5% total) can be
-                    # alleviated by passing a workspace vector through. StatsBase doesn't
-                    # support that, though.
-                    sample!(rng, source_edge, (@view new_edge[2:end]), replace=false) # sample! mutates its 3rd argument only.
+                    # We represent edges as sets. The order returned is arbitrary, so it is
+                    # okay to partially shuffle here:
+                    for i in 1:new_edgesize-1
+                        j = rand(i:lastindex(source_edge))
+                        source_edge[i], source_edge[j] = source_edge[j], source_edge[i]
+                    end
+                    new_edge[2:end] .= @view(source_edge[1:new_edgesize-1])
 
                     #Huzzah! and an actual edge to use
                 end
