@@ -1,1 +1,1 @@
-er(n, m, k) = reshape(rand(Base.OneTo(n), m*k), k, m)
+er(n, m, k) = rand(Base.OneTo(n), k, m)
