@@ -1,7 +1,7 @@
 module FBD
 
 export example, MEPS, hypergraphsize,
-    DCHSBM_sampler, Kronecker_sampler, Typing_sampler, ER_sampler,
+    DCHSBM_sampler, Kronecker_sampler, Typing_sampler,
     hyper_pa, er,
     AliasTable
 
@@ -18,8 +18,7 @@ include("hyper_pa.jl")
 
 include("typing.jl")
 
-include("ER.jl")
-include("simple_er.jl")
+include("er.jl")
 
 include("examples.jl")
 

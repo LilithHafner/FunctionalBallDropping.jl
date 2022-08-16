@@ -12,7 +12,7 @@ include("kronecker/model.jl")
 
 include("typing.jl")
 
-include("ER.jl")
+include("er.jl")
 
 include("io.jl")
 

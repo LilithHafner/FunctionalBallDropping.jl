@@ -77,16 +77,6 @@ function example(::Type{Typing_sampler}, size)
 
 end
 
-function example(::Type{ER_sampler}, size)
-
-    s = round(Integer, ∛size)
-
-    sampler = ER_sampler(size, s)
-
-    rand(sampler, s^2)
-
-end
-
 function example(::typeof(er), size)
 
     s = round(Integer, ∛size)
@@ -97,7 +87,7 @@ end
 
 hypergraphsize(graph) = sum(length.(graph))
 
-function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, ER_sampler, er], size=100_000, trials=5)
+function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, er], size=100_000, trials=5)
     [begin
         speed = median(begin
             time = @elapsed graph = example(gen, size)
