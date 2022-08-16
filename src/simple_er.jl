@@ -1,1 +1,1 @@
-er(n, m, k) = rand(Base.OneTo(n), k, m)
+er(n, m, k) = rand(1:n, k, m)
