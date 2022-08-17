@@ -1,7 +1,7 @@
 name = "FBD"
 uuid = "86f54e4b-c326-4f4b-ad74-639fc688eb37"
 authors = ["Lilith Orion Hafner <60898866+LilithHafner@users.noreply.github.com> and contributors"]
-version = "0.0.0"
+version = "1.0.0"
 
 [deps]
 Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"

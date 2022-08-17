@@ -3,6 +3,8 @@
 
 generates an example graph using model `Model` with `hypergraphsize` of approximately `size`.
 
+The `example` function is user facing and not part of the public API subject to symver.
+
 # Examples
 
     example(DCHSBM_sampler, 100)
