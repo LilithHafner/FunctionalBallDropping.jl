@@ -1,5 +1,6 @@
 using Distributions
 using StaticArrays
+using SpecialFunctions
 
 struct DCHSBM_sampler{K, I <: Integer} <: Random.Sampler{NTuple{K, I}} # TODO make fully parameterized
     groups::Vector{AliasTable{I, UnitRange{I}}}
@@ -94,7 +95,7 @@ function multiply_by_cell_count(x, group_sizes, m)
     while true
         if i > lastindex(m) || m[i] != m0
             elements = i-i0
-            x *= binomial(group_sizes[m0]+elements-1, elements)
+            x *= Float64(binomial(big(group_sizes[m0]+elements-1), big(elements)))
             if i > lastindex(m)
                 return x
             end

@@ -37,3 +37,20 @@ max_rtol = ceil(tolerance/sqrt(minimum(values(degrees)))*10_000)/10_000
         end
     end
 end
+
+@testset "large very sparse model" begin
+    n = 3_000_000
+    kmax = 30
+
+    Z = rand(1:5, n)
+    ϑ = rand(n) .+ 1
+
+    Ω = FBD.inverse_power_intensity_function(8)
+
+    sampler = DCHSBM_sampler(Ω, Z, ϑ, kmax);
+
+    x = rand(sampler, 100_000);
+
+    @test sum(length.(x)) == 3_000_000
+    @test 2_999_000 ≤ maximum(maximum.(x)) ≤ 3_000_000
+end
