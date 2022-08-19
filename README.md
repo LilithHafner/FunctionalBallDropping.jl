@@ -2,14 +2,14 @@
 
 ## fast hypergraph generation
 
-[![Build Status](https://github.com/LilithHafner/FBD.jl/workflows/CI/badge.svg)](https://github.com/LilithHafner/FBD.jl/actions)
-[![Coverage](https://codecov.io/gh/LilithHafner/FBD.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/LilithHafner/FBD.jl)
+[![Build Status](https://github.com/LilithHafner/FunctionalBallDropping.jl/workflows/CI/badge.svg)](https://github.com/LilithHafner/FunctionalBallDropping.jl/actions)
+[![Coverage](https://codecov.io/gh/LilithHafner/FunctionalBallDropping.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/LilithHafner/FunctionalBallDropping.jl)
 
 Usage:
 
 ```jl
-]add https://github.com/LilithHafner/FBD.jl
-using FBD
+]add https://github.com/LilithHafner/FunctionalBallDropping.jl
+using FunctionalBallDropping
 graph = example(Kronecker_sampler, 30)
 ```
 

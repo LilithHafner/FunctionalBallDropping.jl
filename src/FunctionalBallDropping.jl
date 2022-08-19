@@ -1,4 +1,4 @@
-module FBD
+module FunctionalBallDropping
 
 export example, MEPS, hypergraphsize,
     DCHSBM_sampler, Kronecker_sampler, Typing_sampler,

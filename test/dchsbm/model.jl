@@ -1,7 +1,7 @@
 using StatsBase: countmap
 
 rand(DCHSBM_sampler(x->1, [1,1,1,2,2], fill(1, 5), 3), 10)
-rand(DCHSBM_sampler(x->1/FBD.sorted_unique_count(x)^2, repeat(1:3, inner=10000000), fill(1, 30000000), 2))
+rand(DCHSBM_sampler(x->1/FunctionalBallDropping.sorted_unique_count(x)^2, repeat(1:3, inner=10000000), fill(1, 30000000), 2))
 
 Z = [1,1,1,2,2]
 θ = 1:5
@@ -45,7 +45,7 @@ end
     Z = rand(1:5, n)
     ϑ = rand(n) .+ 1
 
-    Ω = FBD.inverse_power_intensity_function(8)
+    Ω = FunctionalBallDropping.inverse_power_intensity_function(8)
 
     sampler = DCHSBM_sampler(Ω, Z, ϑ, kmax);
 

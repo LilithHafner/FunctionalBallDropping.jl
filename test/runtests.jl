@@ -1,4 +1,4 @@
-using FBD
+using FunctionalBallDropping
 using Test
 
 include("AliasTable.jl")

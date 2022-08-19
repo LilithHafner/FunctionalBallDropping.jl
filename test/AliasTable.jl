@@ -1,8 +1,8 @@
 using StatsBase
 
 @testset "OneToInf" begin
-    x = FBD.OneToInf()
-    y = FBD.OneToInf()
+    x = FunctionalBallDropping.OneToInf()
+    y = FunctionalBallDropping.OneToInf()
     @test x == y
     @test x === y
     @test length(x) > 10^10
