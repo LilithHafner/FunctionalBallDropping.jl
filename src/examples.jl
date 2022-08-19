@@ -60,7 +60,7 @@ end
 function example(::Type{Kronecker_sampler}, size)
     # parameters copied from https://www.cs.purdue.edu/homes/dgleich/codes/hyperkron/
     initializer = [0.99; 0.2;; 0.2; 0.3;;; 0.2; 0.3;; 0.3; 0.05]
-    @static if VERSION < v"1.7"
+    if VERSION < v"1.7"
         initializer = reshape(initializer, (2,2,2))
     end
 
