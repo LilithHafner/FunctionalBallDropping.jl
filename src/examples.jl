@@ -15,7 +15,7 @@ The `example` function is user facing and not part of the public API subject to 
 
     example(Typing_sampler, 10_00)
 
-    example(ER_sampler, 100_00)
+    example(er, 100_00)
 """
 function example end
 
@@ -89,6 +89,14 @@ end
 
 hypergraphsize(graph) = sum(length.(graph))
 
+"""
+    MEPS(;generators, size=100_000, trials=5)
+
+Generate graphs of given `size` using each generator and report the number entries generated
+per second in millions (Millions of Entries Per Second)
+
+The `MEPS` function is user facing and not part of the public API subject to symver.
+"""
 function MEPS(;generators = [DCHSBM_sampler, Kronecker_sampler, hyper_pa, Typing_sampler, er], size=100_000, trials=5)
     [begin
         speed = median(begin
