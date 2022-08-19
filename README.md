@@ -11,7 +11,6 @@ Usage:
 ]add https://github.com/LilithHafner/FBD.jl
 using FBD
 graph = example(Kronecker_sampler, 30)
-display(graph)
 ```
 
 ```jl
