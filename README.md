@@ -3,7 +3,7 @@
 ## fast hypergraph generation
 
 [![Build Status](https://github.com/LilithHafner/FunctionalBallDropping.jl/workflows/CI/badge.svg)](https://github.com/LilithHafner/FunctionalBallDropping.jl/actions)
-[![Coverage](https://codecov.io/gh/LilithHafner/FunctionalBallDropping.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/LilithHafner/FBD.jl)
+[![Coverage](https://codecov.io/gh/LilithHafner/FunctionalBallDropping.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/LilithHafner/FunctionalBallDropping.jl)
 
 Implements efficient generators for a variety of hypergraph (henceforth graph) models inlcuding
 - Hyper preferential attachment (Do, Yoon, Hooi, & Shin)
