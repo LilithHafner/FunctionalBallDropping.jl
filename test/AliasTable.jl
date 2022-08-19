@@ -23,6 +23,7 @@ using StatsBase
     @test e == 3
     @test_throws (VERSION < v"1.8" ? ErrorException : ArgumentError) collect(x)
     @test string(x) == "OneToInf()"
+    @test Base.IteratorSize(x) isa Base.IsInfinite
 end
 
 @testset "alias table" begin #TODO use general integer atol.
