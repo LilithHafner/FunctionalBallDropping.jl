@@ -5,7 +5,7 @@ export example, MEPS, hypergraphsize,
     hyper_pa, er,
     AliasTable
 
-include("alias_table.jl")
+include("AliasTable.jl")
 include("io.jl")
 
 include("dchsbm/intensity_functions.jl")

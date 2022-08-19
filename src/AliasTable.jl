@@ -5,11 +5,11 @@ using StatsBase: make_alias_table!
 
 struct OneToInf <: AbstractVector{Int} end
 Base.size(::OneToInf) = (typemax(Int),)
-Base.getindex(::OneToInf, x::Integer) = x
+Base.getindex(::OneToInf, x::Int) = x
 Base.iterate(::OneToInf, state=1) = (state, state+1)
 Base.eltype(::Type{OneToInf}) = Int
 Base.IteratorSize(::Type{OneToInf}) = Base.IsInfinite()
-Base.show(io::IO, X::OneToInf) = print(io, "OneToInf()")
+Base.show(io::IO, _::OneToInf) = print(io, "OneToInf()")
 Base.:(==)(::OneToInf, ::OneToInf) = true
 
 struct AliasTable{T, S} <: Random.Sampler{T} where {S <: AbstractVector{T}}

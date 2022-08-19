@@ -1,7 +1,7 @@
 using FBD
 using Test
 
-include("util.jl")
+include("AliasTable.jl")
 
 include("dchsbm/model.jl")
 
