@@ -40,4 +40,14 @@ See [`src/examples.jl`](src/examples.jl) for examples!
 
 ### Performance
 
-Graphs are produced at a rate of 10<sup>7</sup>–10<sup>8</sup> edges in the bipartite projection per second for all models on a single threaded 1.6 Ghz machine. For large graphs, this system is capable of producing gaphs in 8-300 clock cycles per entry, depending on the model.
+Medium and large graphs are produced at a rate of 3 million to 150 million edges in the bipartite projection per second for all models on a single threaded 1.6 Ghz machine. The number of clock cycles per bipartite edge for each model at a variety of scales is approximately as follows:
+
+| Model \ Size | 10 | 10<sup>2</sup> | 10<sup>3</sup> | 10<sup>4</sup> | 10<sup>5</sup> | 10<sup>6</sup> | 10<sup>7</sup> |
+|-|----|----------------|----------------|----------------|----------------|----------------|----------------|
+| Preferential Attachment | 203 | 208 | 103 | 77 | 88 | 141 | 223 |
+| Degree Corrected Stochastic Block | 25750 | 2137 | 281 | 85 | 52 | 39 | 29 |
+| Kronecker | 196 | 54 | 58 | 85 | 71 | 54 | 45 |
+| Typing | 305 | 187 | 188 | 187 | 187 | 252 | 448 |
+| Uniform | 28 | 9 | 9 | 14 | 14 | 15 | 11 |
+
+A forthcoming paper utilizing results from [FBDCompare.jl](https://github.com/LilithHafner/FBDCompare.jl) compares the performance of this package to the previous state of the art.
