@@ -3,6 +3,7 @@ using Test
 
 include("AliasTable.jl")
 
+include("dchsbm/intensity_functions.jl")
 include("dchsbm/model.jl")
 
 include("hyper_pa.jl")

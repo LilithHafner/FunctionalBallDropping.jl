@@ -14,5 +14,5 @@ inverse_power_intensity_function(α::Real) = m -> 1/sorted_unique_count(m)^α
 Returns an intensity function that is `α` when a multiset contains only a single community
 and `β` otherwise.
 """
-all_or_nothing_intensity_function(α::Real, β::Real) = m -> all(isequal(first(m)), m) ? α : β
+all_or_nothing_intensity_function(α::Real, β::Real) = m -> isempty(m) || all(isequal(first(m)), m) ? α : β
 # not using allequal because it was introduced in 1.8.
