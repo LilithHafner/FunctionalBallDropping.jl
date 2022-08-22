@@ -17,7 +17,6 @@ In all cases, maximum edge size (also known as hyperdegree) can vary from 1–30
 ### Usage
 
 ```jl
-]add https://github.com/LilithHafner/FunctionalBallDropping.jl
 using FunctionalBallDropping
 graph = example(Kronecker_sampler, 30)
 ```
